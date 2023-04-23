@@ -58,5 +58,7 @@
     <string name="title_deport">Actividad fisica Consejos  -  Recomendaciones</string>
     <string name="title_food">Genera tu dieta</string>
     <string name="breakfast">Desayuno</string>
+    <string name="lunch">Almuerzo</string>
+    <string name="dinner">Cena</string>
 
 </resources>

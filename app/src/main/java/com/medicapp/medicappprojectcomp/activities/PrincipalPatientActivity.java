@@ -6,14 +6,14 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.medicapp.medicappprojectcomp.R;
 import com.medicapp.medicappprojectcomp.databinding.ActivityPrincipalPatientBinding;
 import com.medicapp.medicappprojectcomp.fragments.ChatFragment;
-import com.medicapp.medicappprojectcomp.fragments.MainDeportFragment;
+import com.medicapp.medicappprojectcomp.fragments.FoodMainFragment;
 import com.medicapp.medicappprojectcomp.fragments.MapFragment;
 import com.medicapp.medicappprojectcomp.fragments.MedicalDiagnosticFragment;
 import com.medicapp.medicappprojectcomp.fragments.ProfileFragment;
@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class PrincipalPatientActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class PrincipalPatientActivity extends BaseActivity{
     ActivityPrincipalPatientBinding binding;
 
     @Inject
@@ -40,10 +40,62 @@ public class PrincipalPatientActivity extends BaseActivity implements Navigation
         binding = ActivityPrincipalPatientBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setToolbar();
-        binding.navMenu.setNavigationItemSelectedListener(this);
+        binding.navBar.setOnNavigationItemSelectedListener( bottomItemSelectedListener);
+        binding.navBar.bringToFront();
+        binding.navMenu.setNavigationItemSelectedListener(onNavigationItemSelected);
         binding.navMenu.bringToFront();
-
     }
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener bottomItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            loadFragment(item);
+            return true;
+        }
+    };
+
+    private void loadFragment(MenuItem item) {
+        Fragment fragment = null;
+        boolean fragmentTransaction = false;
+        switch (item.getItemId()){
+            case R.id.navigation_chat:
+            case R.id.menu_chat:
+                getSupportActionBar().hide();
+                fragment = new ChatFragment();
+                fragmentTransaction = true;
+                break;
+            case R.id.navigation_point:
+            case R.id.menu_point:
+                getSupportActionBar().show();
+                fragment = new MapFragment();
+                fragmentTransaction = true;
+                break;
+            case R.id.menu_profile:
+                getSupportActionBar().hide();
+                fragment = new ProfileFragment();
+                fragmentTransaction = true;
+                break;
+            case R.id.menu_diagnostics:
+                getSupportActionBar().show();
+                binding.navBar.setVisibility(View.INVISIBLE);
+                fragment = new MedicalDiagnosticFragment();
+                fragmentTransaction = true;
+                break;
+            case R.id.menu_food:
+                getSupportActionBar().show();
+                binding.navBar.setVisibility(View.INVISIBLE);
+                fragment = new FoodMainFragment();
+                fragmentTransaction = true;
+                break;
+        }
+        if (fragmentTransaction) {
+            changeFragment(fragment, item);
+            binding.drawerLayout.closeDrawers();
+        }
+    }
+
+
     private void setToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,56 +116,26 @@ public class PrincipalPatientActivity extends BaseActivity implements Navigation
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        boolean fragmentTransaction = false;
+        Fragment fragment = null;
         switch (item.getItemId()) {
             case android.R.id.home:
-               binding.drawerLayout.openDrawer(GravityCompat.START);
-               return true;
+                fragment = new ProfileFragment();
+                fragmentTransaction = true;
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        boolean fragmentTransaction = false;
-        Fragment fragment = null;
 
-        switch (item.getItemId()) {
-            case R.id.menu_chat:
-                getSupportActionBar().hide();
-                fragment = new ChatFragment();
-                fragmentTransaction = true;
-                break;
-            case R.id.menu_profile:
-                getSupportActionBar().hide();
-                fragment = new ProfileFragment();
-                fragmentTransaction = true;
-                break;
-            case R.id.menu_point:
-                getSupportActionBar().show();
-                fragment = new MapFragment();
-                fragmentTransaction = true;
-                break;
-            case R.id.menu_diagnostics:
-                getSupportActionBar().show();
-                binding.navBar.setVisibility(View.INVISIBLE);
-                fragment = new MedicalDiagnosticFragment();
-                fragmentTransaction = true;
-                break;
-            case R.id.menu_food:
-                getSupportActionBar().show();
-                binding.navBar.setVisibility(View.INVISIBLE);
-                fragment = new MainDeportFragment();
-                fragmentTransaction = true;
-                break;
+    NavigationView.OnNavigationItemSelectedListener  onNavigationItemSelected= new NavigationView.OnNavigationItemSelectedListener () {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            loadFragment(item);
+            return true;
         }
-        if (fragmentTransaction) {
-            changeFragment(fragment, item);
-            binding.drawerLayout.closeDrawers();
-        }
-        return true;
-    }
+    };
 
     @Override
     protected void onStart() {
@@ -140,5 +162,6 @@ public class PrincipalPatientActivity extends BaseActivity implements Navigation
             }
         }
     }
+
 
 }

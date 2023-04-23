@@ -87,10 +87,13 @@
                     android:layout_height="match_parent">
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/animationLunch"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         app:lottie_rawRes="@raw/carousel"
                         app:lottie_autoPlay="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_centerVertical="true"
                         app:lottie_loop="true"/>
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="wrap_content"
@@ -144,8 +147,11 @@
                     android:layout_height="match_parent">
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/animationDinner"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_centerVertical="true"
                         app:lottie_rawRes="@raw/carousel"
                         app:lottie_autoPlay="true"
                         app:lottie_loop="true"/>
@@ -201,10 +207,13 @@
                     android:layout_height="match_parent">
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/animationBreakfast"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         app:lottie_rawRes="@raw/carousel"
                         app:lottie_autoPlay="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_centerVertical="true"
                         app:lottie_loop="true"/>
 
                     <androidx.appcompat.widget.LinearLayoutCompat

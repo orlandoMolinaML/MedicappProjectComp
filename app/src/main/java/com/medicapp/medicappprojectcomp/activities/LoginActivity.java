@@ -59,6 +59,7 @@ public class LoginActivity  extends BaseActivity {
             binding.userName.setErrorEnabled(false);
         }
         if(!android.util.Patterns.EMAIL_ADDRESS.matcher(binding.userName.getEditText().getText().toString()).matches()){
+            binding.userName.setErrorIconDrawable(R.drawable.ic_mail_error);
             binding.userName.setError(getString(R.string.error_email));
             return;
         }else {

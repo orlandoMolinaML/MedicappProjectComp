@@ -1,5 +1,6 @@
 package com.medicapp.medicappprojectcomp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.medicapp.medicappprojectcomp.R;
 import com.medicapp.medicappprojectcomp.databinding.ActivityPrincipalPatientBinding;
 import com.medicapp.medicappprojectcomp.fragments.ChatFragment;
@@ -27,12 +30,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class PrincipalPatientActivity extends BaseActivity{
     ActivityPrincipalPatientBinding binding;
-
     @Inject
     PermissionService permissionService;
-
     @Inject
     LocationService locationService;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +94,24 @@ public class PrincipalPatientActivity extends BaseActivity{
                 fragment = new FoodMainFragment();
                 fragmentTransaction = true;
                 break;
+            case R.id.menu_exit:
+                exit();
+                break;
         }
         if (fragmentTransaction) {
              changeFragment(fragment, item);
             binding.drawerLayout.closeDrawers();
         }
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(firebaseAuth.getCurrentUser() == null){
+            exit();
+        } else {
+            user = firebaseAuth.getCurrentUser();
+        }
+    }
 
     private void setToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -166,5 +180,11 @@ public class PrincipalPatientActivity extends BaseActivity{
         }
     }
 
+    private void exit(){
+        firebaseAuth.signOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 
 }

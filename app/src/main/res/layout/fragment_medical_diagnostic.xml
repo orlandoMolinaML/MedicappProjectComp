@@ -113,6 +113,7 @@
             app:icon="@drawable/ic_action_menu"/>
 
     <ImageView
+        android:id="@+id/imageFood"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_c_food_d"
@@ -120,6 +121,7 @@
         android:layout_margin="16dp" />
 
     <ImageView
+        android:id="@+id/imageSport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_c_exercise"

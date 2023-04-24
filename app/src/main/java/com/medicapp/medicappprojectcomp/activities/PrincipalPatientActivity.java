@@ -90,7 +90,7 @@ public class PrincipalPatientActivity extends BaseActivity{
                 break;
         }
         if (fragmentTransaction) {
-            changeFragment(fragment, item);
+             changeFragment(fragment, item);
             binding.drawerLayout.closeDrawers();
         }
     }

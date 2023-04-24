@@ -60,5 +60,9 @@
     <string name="breakfast">Desayuno</string>
     <string name="lunch">Almuerzo</string>
     <string name="dinner">Cena</string>
+    <string name="error_empty">Required</string>
+    <string name="error_email">Correo invalido</string>
+    <string name="understood">Entendido</string>
+    <string name="messageInfo">Por favor valide su usuario y contraseña</string>
 
 </resources>

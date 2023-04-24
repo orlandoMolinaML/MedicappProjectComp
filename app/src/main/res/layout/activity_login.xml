@@ -53,6 +53,7 @@
         android:textColorHighlight="@color/blue_700"
         android:layout_marginTop="3dp"
         android:ems="10"
+        android:id="@+id/passwordText"
         android:textSize="18sp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
@@ -60,7 +61,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/buttonSend"
+        android:id="@+id/buttonLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textPassword"
@@ -80,7 +81,7 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonSend"
+        android:layout_below="@+id/buttonLogin"
         android:layout_alignParentEnd="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"

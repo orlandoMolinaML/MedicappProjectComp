@@ -36,13 +36,22 @@ public class GeocoderService {
         this.geocoder = new Geocoder(context);
     }
 
-    public List<Address> findPlacesByName(String name) throws IOException {
-        return geocoder.getFromLocationName(name, MAX_RESULTS);
-    }
-
-    public List<Address> finPlacesByNameInRadius(String name, LatLng centerPosition) throws IOException {
+    public List<Address> findPlacesByNameInRadius(String name, LatLng centerPosition) throws IOException {
         LatLng upperLeftPosition = DistanceUtils.moveLatLngInKilometer(-DISTANCE_RADIUS_KM, -DISTANCE_RADIUS_KM, centerPosition);
         LatLng bottomRightPosition = DistanceUtils.moveLatLngInKilometer(DISTANCE_RADIUS_KM, DISTANCE_RADIUS_KM, centerPosition);
         return geocoder.getFromLocationName(name, MAX_RESULTS, upperLeftPosition.latitude, upperLeftPosition.longitude, bottomRightPosition.latitude, bottomRightPosition.longitude);
+    }
+
+    public Address findPlacesByLatLng(LatLng position) {
+        List<Address> addresses= null;
+        try {
+            addresses = geocoder.getFromLocation(position.latitude, position.longitude, 1);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if(addresses!=null && !addresses.isEmpty()){
+            return addresses.get(0);
+        }
+        return null;
     }
 }

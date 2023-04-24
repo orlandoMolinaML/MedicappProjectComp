@@ -61,17 +61,20 @@ public class PrincipalPatientActivity extends BaseActivity{
         switch (item.getItemId()){
             case R.id.navigation_chat:
             case R.id.menu_chat:
+                binding.navBar.setVisibility(View.VISIBLE);
                 getSupportActionBar().hide();
                 fragment = new ChatFragment();
                 fragmentTransaction = true;
                 break;
             case R.id.navigation_point:
             case R.id.menu_point:
+                binding.navBar.setVisibility(View.VISIBLE);
                 getSupportActionBar().show();
                 fragment = new MapFragment();
                 fragmentTransaction = true;
                 break;
             case R.id.menu_profile:
+                binding.navBar.setVisibility(View.VISIBLE);
                 getSupportActionBar().hide();
                 fragment = new ProfileFragment();
                 fragmentTransaction = true;

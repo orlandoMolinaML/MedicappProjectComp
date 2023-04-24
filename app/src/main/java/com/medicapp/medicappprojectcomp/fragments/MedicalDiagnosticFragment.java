@@ -35,6 +35,8 @@ public class MedicalDiagnosticFragment extends Fragment {
         binding.buttonMore.setOnClickListener(buttonListener);
         binding.imageSport.setOnClickListener(imageSportListener);
         binding.imageFood.setOnClickListener(imageFoodListener);
+        binding.buttonAdd.setOnClickListener(buttonAddIns);
+        binding.buttonAdd.setOnClickListener(buttonAddGlu);
     }
 
     View.OnClickListener buttonListener=new View.OnClickListener() {
@@ -45,6 +47,19 @@ public class MedicalDiagnosticFragment extends Fragment {
         }
     };
 
+    View.OnClickListener buttonAddIns=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            changeFragment(new RegistryInsulinFragment());
+        }
+    };
+
+    View.OnClickListener buttonAddGlu=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            changeFragment(new RegistryGlucoseFragment());
+        }
+    };
     View.OnClickListener imageSportListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {

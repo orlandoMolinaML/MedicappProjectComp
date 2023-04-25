@@ -214,7 +214,7 @@ public class PrincipalPatientActivity extends BaseActivity implements IFragment 
         if (requestCode == PermissionService.PERMISSIONS_REQUEST_LOCATION) {
             permissionService.getLocationPermission(this);
             if (permissionService.isMLocationPermissionGranted()) {
-               locationService.startLocation();
+                locationService.startLocation();
             }
         }
     }
@@ -228,7 +228,7 @@ public class PrincipalPatientActivity extends BaseActivity implements IFragment 
 
 	@Override
     public void load() {
-        Toast.makeText(this, "INICIAR PRI ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "FOTO DE PERFIL", Toast.LENGTH_SHORT).show();
         clickTake();
     }
 

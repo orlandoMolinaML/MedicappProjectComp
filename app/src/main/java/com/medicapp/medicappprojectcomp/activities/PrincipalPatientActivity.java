@@ -19,6 +19,7 @@ import com.medicapp.medicappprojectcomp.fragments.ChatFragment;
 import com.medicapp.medicappprojectcomp.fragments.FoodMainFragment;
 import com.medicapp.medicappprojectcomp.fragments.MapFragment;
 import com.medicapp.medicappprojectcomp.fragments.MedicalDiagnosticFragment;
+import com.medicapp.medicappprojectcomp.fragments.NewsFragment;
 import com.medicapp.medicappprojectcomp.fragments.ProfileFragment;
 import com.medicapp.medicappprojectcomp.servicies.LocationService;
 import com.medicapp.medicappprojectcomp.servicies.PermissionService;
@@ -92,6 +93,12 @@ public class PrincipalPatientActivity extends BaseActivity{
                 getSupportActionBar().show();
                 binding.navBar.setVisibility(View.INVISIBLE);
                 fragment = new FoodMainFragment();
+                fragmentTransaction = true;
+                break;
+            case R.id.menu_news:
+                getSupportActionBar().show();
+                binding.navBar.setVisibility(View.INVISIBLE);
+                fragment = new NewsFragment();
                 fragmentTransaction = true;
                 break;
             case R.id.menu_exit:

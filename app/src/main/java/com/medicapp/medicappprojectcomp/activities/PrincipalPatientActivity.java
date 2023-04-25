@@ -219,7 +219,7 @@ public class PrincipalPatientActivity extends BaseActivity implements IFragment 
         }
     }
 
-    private void exit(){
+    public void exit(){
         firebaseAuth.signOut();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -280,6 +280,9 @@ public class PrincipalPatientActivity extends BaseActivity implements IFragment 
 
     private void loadImage() {
         bindingProfile.layoutVideo.removeAllViews();
+        ImageView img= (ImageView) findViewById(R.id.imageUser);
+        img.setImageURI(picturePath);
+       /*
         ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
         if(bitMap==null){
@@ -287,10 +290,12 @@ public class PrincipalPatientActivity extends BaseActivity implements IFragment 
         }else{
             imageView.setImageBitmap(bitMap);
         }
-        imageView.getLayoutParams().height=1200;
+        imageView.getLayoutParams().height=10;
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setAdjustViewBounds(true);
         bindingProfile.layoutVideo.addView(imageView);
+
+        */
     }
 
 }

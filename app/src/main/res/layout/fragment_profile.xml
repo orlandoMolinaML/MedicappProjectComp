@@ -12,6 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/layoutVideo"
+            android:layout_width="match_parent"
+            android:layout_height="469dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="25dp">
+
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/headerImage"
@@ -28,15 +37,13 @@
             android:layout_marginTop="-43dp"
             android:layout_below="@+id/headerImage"
             android:src="@drawable/ic_launcher_foreground" />
-
-        <ImageView
-            android:id="@+id/buttonCamera"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="1dp"
-            android:layout_below="@+id/imageUser"
-            android:src="@drawable/ic_camera" />
-
+            <ImageView
+                android:id="@+id/buttonCamera"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="1dp"
+                android:layout_below="@+id/imageUser"
+                android:src="@drawable/ic_camera" />
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDetails"
             android:layout_width="match_parent"

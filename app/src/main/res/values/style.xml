@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="textInput" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/blue_200</item>
+        <item name="colorPrimaryDark">@color/blue_500</item>
+        <item name="colorAccent">@color/white</item>
+    </style>
     <style name="counterText">
         <item name="android:textColor">#aa5353cc</item>
     </style>

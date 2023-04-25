@@ -2,7 +2,9 @@ package com.medicapp.medicappprojectcomp.servicies;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
@@ -30,9 +32,21 @@ public class PermissionService {
 
     static public final int PERMISSIONS_REQUEST_LOCATION = 1003;
 
+    static public final int PERMISSIONS_PHOTO = 1004;
+
+    static public final int PERMISSIONS_VIDEO= 1005;
+
+    static public final int PERMISSIONS_EXTERNAL_LOAD = 1006;
+
     private boolean mCameraPermissionGranted;
     private boolean mReadExternalStoragePermissionGranted;
     private boolean mLocationPermissionGranted;
+
+    private boolean mPhotoPermission;
+
+    private boolean mVideoPermission;
+
+    private boolean mAccessExternal;
 
 
     private Context context;
@@ -43,6 +57,9 @@ public class PermissionService {
         mCameraPermissionGranted = checkPermission(Manifest.permission.CAMERA);
         mReadExternalStoragePermissionGranted = checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
         mLocationPermissionGranted = checkPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+        mPhotoPermission=checkPermission(Manifest.permission.READ_MEDIA_IMAGES);
+        mVideoPermission=checkPermission(Manifest.permission.READ_MEDIA_VIDEO);
+        mAccessExternal=checkPermission(Manifest.permission.ACCESS_MEDIA_LOCATION);
     }
 
     public void getCameraPermission(Activity activity) {
@@ -64,11 +81,29 @@ public class PermissionService {
 
 
     public void getReadExternalStoragePermission(Activity activity) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
+            if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                mReadExternalStoragePermissionGranted = true;
+            } else {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        }else{
+            Intent intent=new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            activity.startActivityForResult(intent,PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        }
+    }
 
-        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            mReadExternalStoragePermissionGranted = true;
+    public void getReadPhotosAndVideo(Activity activity) {
+        if (checkPermission(Manifest.permission.READ_MEDIA_IMAGES)){
+            mPhotoPermission=true;
+        }else{
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, PERMISSIONS_PHOTO);
+        }
+        if (checkPermission(Manifest.permission.READ_MEDIA_VIDEO) ) {
+            mVideoPermission=true;
         } else {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_MEDIA_VIDEO}, PERMISSIONS_VIDEO);
         }
 
 
@@ -85,4 +120,3 @@ public class PermissionService {
     }
 
 }
-

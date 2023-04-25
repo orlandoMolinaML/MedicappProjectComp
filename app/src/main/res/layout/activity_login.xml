@@ -19,8 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:counterMaxLength="10"
+        app:errorTextAppearance="@style/errorText"
         android:layout_below="@+id/imagePrimary"
         android:id="@+id/userName"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         app:counterTextAppearance="@style/counterText"
         app:counterOverflowTextAppearance="@style/counterOverride">
         <EditText
@@ -28,11 +31,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/userNameText"
             android:layout_marginTop="10dp"
-            android:ems="10"
+            android:ems="1"
             android:textColorHighlight="@color/blue_700"
             android:textSize="18sp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
             android:inputType="textPersonName"
             android:hint="@string/user"  />
     </com.google.android.material.textfield.TextInputLayout>
@@ -44,6 +45,8 @@
         android:inputType="textPassword"
         android:id="@+id/textPassword"
         android:layout_below="@+id/userName"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         app:counterTextAppearance="@style/counterText"
         app:counterOverflowTextAppearance="@style/counterOverride">
 
@@ -54,9 +57,8 @@
         android:layout_marginTop="3dp"
         android:ems="10"
         android:id="@+id/passwordText"
+        android:inputType="textPassword"
         android:textSize="18sp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
         android:hint="@string/password" />
     </com.google.android.material.textfield.TextInputLayout>
 

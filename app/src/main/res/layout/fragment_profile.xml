@@ -113,7 +113,7 @@
                     android:layout_marginRight="25dp"
                     android:drawableStart="@drawable/ic_calendar"
                     android:ems="10"
-                    android:hint="@string/email"
+                    android:hint="@string/birthday"
                     android:inputType="textPersonName"
                     android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>

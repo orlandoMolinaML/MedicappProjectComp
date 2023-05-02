@@ -50,7 +50,7 @@
                 android:textColor="@android:color/white" />
 
             <ImageView
-                android:id="@+id/buttonCamera"
+                android:id="@+id/buttonRemember"
                 android:layout_width="79dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="1dp"

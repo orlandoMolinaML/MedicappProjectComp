@@ -36,9 +36,15 @@ public class MedicalDiagnosticFragment extends Fragment {
         binding.imageSport.setOnClickListener(imageSportListener);
         binding.imageFood.setOnClickListener(imageFoodListener);
         binding.buttonAdd.setOnClickListener(buttonAddIns);
-        binding.buttonAdd.setOnClickListener(buttonAddGlu);
+        binding.buttonAddG.setOnClickListener(buttonAddGlu);
+        binding.buttonRemember.setOnClickListener(buttonRemember);
     }
-
+    View.OnClickListener buttonRemember=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+                changeFragment(new ReminderFragment());
+        }
+    };
     View.OnClickListener buttonListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {

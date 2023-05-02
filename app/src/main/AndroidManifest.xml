@@ -10,6 +10,15 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <queries>
+        <!-- Camera -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+        <intent>
+            <action android:name="android.media.action.ACTION_VIDEO_CAPTURE" />
+        </intent>
+    </queries>
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -19,6 +28,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicappProject"
+        tools:replace="android:allowBackup"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".AdapterNews"
@@ -38,6 +49,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC3jhV_j3ckowJg3zj19sH5zAlMZ4nkY4g" />
 
+
         <activity
             android:name=".App"
             android:exported="false" />
@@ -51,6 +63,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.medicapp.medicappprojectcomp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

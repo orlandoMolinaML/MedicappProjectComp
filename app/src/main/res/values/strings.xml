@@ -42,6 +42,7 @@
     <string name="comment">Comentario</string>
     <string name="mood">Cómo te sientes?</string>
     <string name="add">Añadir</string>
+    <string name="update">Actualizar</string>
     <string name="add_recommend">Generar recomendación</string>
     <string name="add_reminder">Generar recordatorio</string>
     <string name="date_start">Fecha Inicio</string>
@@ -64,5 +65,8 @@
     <string name="error_email">Correo invalido</string>
     <string name="understood">Entendido</string>
     <string name="messageInfo">Por favor valide su usuario y contraseña</string>
-
+    <string name="updateSuccesfull">Actualización exitosa</string>
+    <string name="updateError">Error en actualización</string>
+    <string name="http_user_agent">Medicapp/1.0</string>
+    <string name="mapbox_access_token">ipN4wfYfCP68OzCTP5lI5oPYxZkojdpvciYqY9f1</string>
 </resources>

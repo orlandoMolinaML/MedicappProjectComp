@@ -16,12 +16,13 @@ public class Patient {
     private Date birthday;
     private Date dateDiagnostic;
     private String email;
-    private String height;
+    private Double height;
     private String imageUrl;
     private String lastName;
     private String name;
     private String numberDocument;
     private String typeDocument;
-    private String weight;
+    private Long weight;
+    private String id;
 
 }

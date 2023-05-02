@@ -47,7 +47,7 @@ public class GeocoderService {
         try {
             addresses = geocoder.getFromLocation(position.latitude, position.longitude, 1);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         if(addresses!=null && !addresses.isEmpty()){
             return addresses.get(0);

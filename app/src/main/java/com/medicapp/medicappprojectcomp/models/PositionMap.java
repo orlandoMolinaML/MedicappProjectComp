@@ -17,4 +17,5 @@ public class PositionMap {
     private String imageBase64;
     private LatLng position;
     private String address;
+    private String phone;
 }

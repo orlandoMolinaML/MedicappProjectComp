@@ -1,5 +1,6 @@
 package com.medicapp.medicappprojectcomp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,13 @@ import com.medicapp.medicappprojectcomp.models.PositionMap;
 
 import java.util.List;
 
-public class AdapterPointMap  extends  RecyclerView.Adapter<AdapterPointMap.ViewHolder> {
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+public class AdapterPointMap  extends  RecyclerView.Adapter<AdapterPointMap.ViewHolder> {
+    private OnItemClickListener listener;
     private List<PositionMap> dataSet;
     Context mContext;
 
@@ -38,14 +44,26 @@ public class AdapterPointMap  extends  RecyclerView.Adapter<AdapterPointMap.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.textTitle.setText(dataSet.get(position).getTitle());
         holder.textAddress.setText(dataSet.get(position).getAddress());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClick(position);
+            }
+        });
     }
-
+    public PositionMap getItem(int position){
+        return dataSet.get(position);
+    }
     @Override
     public int getItemCount() {
-        return dataSet.size();
+        if(dataSet!=null) {
+            return dataSet.size();
+        }else{
+            return 0;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -57,6 +75,17 @@ public class AdapterPointMap  extends  RecyclerView.Adapter<AdapterPointMap.View
             textTitle = itemView.findViewById(R.id.textNamePoint);
             textAddress = itemView.findViewById(R.id.textAddressPoint);
         }
+
+
+
     }
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener mListener) {
+        listener = mListener;
+    }
+
 
 }

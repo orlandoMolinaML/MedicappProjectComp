@@ -1,19 +1,21 @@
 package com.medicapp.medicappprojectcomp.fragments;
 
-import static android.content.Context.LOCATION_SERVICE;
+import static android.graphics.Color.RED;
+import static android.service.controls.ControlsProviderService.TAG;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,35 +23,45 @@ import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.medicapp.medicappprojectcomp.R;
 import com.medicapp.medicappprojectcomp.adapters.AdapterPointMap;
 import com.medicapp.medicappprojectcomp.databinding.FragmentMapBinding;
 import com.medicapp.medicappprojectcomp.models.PositionMap;
 import com.medicapp.medicappprojectcomp.servicies.GeocoderService;
 import com.medicapp.medicappprojectcomp.servicies.LocationService;
-import com.medicapp.medicappprojectcomp.utils.BitmapUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ScaleBarOverlay;
+import org.osmdroid.views.overlay.TilesOverlay;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,11 +82,17 @@ public class MapFragment extends Fragment {
     @Inject
     GeocoderService geocoderService;
 
-    //Map interaction variables
-    GoogleMap googleMap;
+    MapView map;
+    MyLocationNewOverlay myLocation;
+    org.osmdroid.views.overlay.Marker markerPosition;
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
+
     static final int INITIAL_ZOOM_LEVEL = 18;
     Marker userPosition;
-    Polyline userRoute;
+
     //light sensor
     SensorManager sensorManager;
     Sensor lightSensor;
@@ -84,64 +102,7 @@ public class MapFragment extends Fragment {
     LatLng latLngUser;
     private static AdapterPointMap adapter;
     List<PositionMap> points;
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-        @Override
-        public void onMapReady(GoogleMap map) {
-
-           /* SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
-                    .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);null
-            */
-            //Setup the map
-
-            googleMap = map;
-            locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
-            googleMap.moveCamera(CameraUpdateFactory.zoomTo(INITIAL_ZOOM_LEVEL));
-            googleMap.getUiSettings().setAllGesturesEnabled(true);
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
-            googleMap.getUiSettings().setZoomGesturesEnabled(true);
-            googleMap.getUiSettings().setCompassEnabled(true);
-
-            userRoute = googleMap.addPolyline(new PolylineOptions()
-                    .color(Color.RED)
-                    .width(30.0f)
-                    .geodesic(true));
-            getLocation();
-            loadHospital();
-            //Setup the rest of the markers based in a json file
-
-        }
-    };
-
-    @SuppressLint("MissingPermission")
-    private void getLocation() {
-        LocationServices.getFusedLocationProviderClient(getContext()).getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location!=null) {
-                    latLngUser = new LatLng(location.getLatitude(), location.getLongitude());
-                    userPosition = googleMap.addMarker(new MarkerOptions()
-                            .position(latLngUser)
-                            .icon(BitmapUtils.getBitmapDescriptor(getContext(), R.drawable.ic_point))
-                            .title("Usted esta aqui!")
-                            .snippet("Y otra cosas")
-                            .anchor(0.5f, 1.0f)
-                            .zIndex(1.0f));
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLngUser));
-                }
-            }
-        });
-    }
 
     @Nullable
     @Override
@@ -149,12 +110,37 @@ public class MapFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentMapBinding.inflate(inflater);
-        points=loadInfo();
-        adapter= new AdapterPointMap(points);
-        RecyclerView recyclerViewPoint=(RecyclerView) binding.listPoints;
+        adapter = new AdapterPointMap(points);
+        RecyclerView recyclerViewPoint = (RecyclerView) binding.listPoints;
         recyclerViewPoint.setLayoutManager(new LinearLayoutManager(getContext()));
+
         recyclerViewPoint.setAdapter(adapter);
+        map = binding.getRoot().findViewById(R.id.map1);
+        //validateRoute();
         return binding.getRoot();
+
+    }
+
+    private void validateRoute() {
+        RoadManager roadManager = new OSRMRoadManager(getContext());
+        roadManager.addRequestOption("profile=driving");
+        GeoPoint startPoint = new GeoPoint(4.6287655353352966, -74.06460013146082); // Torre Eiffel
+        GeoPoint endPoint = new GeoPoint(4.6243382701642615, -74.06476106400758); // Big Ben
+        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+        waypoints.add(startPoint);
+        waypoints.add(endPoint);
+        Road road = roadManager.getRoad(waypoints);
+        org.osmdroid.views.overlay.Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+        roadOverlay.setColor(RED);
+        roadOverlay.setWidth(5);
+        List<GeoPoint> routePoints = roadOverlay.getActualPoints();
+        for (GeoPoint point : routePoints) {
+            Log.d(TAG, "Latitud: " + point.getLatitude() + " Longitud: " + point.getLongitude());
+        }
+        map.getOverlayManager().add(roadOverlay);
+        map.invalidate();
+        System.out.println();
+
     }
 
     @Override
@@ -162,64 +148,65 @@ public class MapFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(callback);
-        }
         binding.addressInput.getEditText().setOnEditorActionListener((textView, i, keyEvent) -> {
-            if(i == EditorInfo.IME_ACTION_SEARCH || i== EditorInfo.IME_ACTION_GO){
+            if (i == EditorInfo.IME_ACTION_SEARCH || i == EditorInfo.IME_ACTION_GO) {
                 filterPoint();
-                findPlace();
                 return true;
             }
             return false;
         });
+        adapter.setOnItemClickListener(new AdapterPointMap.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                PositionMap positionSel=adapter.getItem(position);
+                map.getOverlays().forEach(overlay->{
+                    if(overlay instanceof org.osmdroid.views.overlay.Marker){
+                        org.osmdroid.views.overlay.Marker markerPos=(org.osmdroid.views.overlay.Marker) overlay;
+                        if(markerPos.getTitle().contains(positionSel.getTitle())) {
+                            markerPos.setIcon(getResources().getDrawable(R.drawable.ic_hospital_2));
+                        }
+                    }
+                });
+            }
+        });
+
     }
 
     private void filterPoint() {
-        points=loadInfo();
-        points=points.stream().filter(c->c.getTitle().contains(binding.addressInput.getEditText().getText())).collect(Collectors.toList());;
-        adapter.setList(points);
+        List<PositionMap> poinstFilter;
+        poinstFilter = points.stream().filter(c -> c.getTitle().contains(binding.addressInput.getEditText().getText())).collect(Collectors.toList());
+        adapter.setList(poinstFilter);
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        points=loadInfo();
+        if(points!=null && adapter!=null) {
+            adapter.setDataSet(points);
+        }
         super.onCreate(savedInstanceState);
-        locationService.setLocationCallback(new LocationCallback() {
-            @Override
-            public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
-                super.onLocationAvailability(locationAvailability);
-            }
-
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                    updateUserPositionOnMap(locationResult);
-            }
-        });
-
     }
 
-    private void findPlace(){
+    private void findPlace() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if(marker!=null){
-                marker.remove();
-            }
             try {
                 geocoderService.findPlacesByNameInRadius(binding.addressInput.getEditText().getText().toString(), userPosition.getPosition()).forEach(address -> {
-                    LatLng lat=new LatLng(address.getLatitude(), address.getLongitude());
-                    marker= googleMap.addMarker(new MarkerOptions()
-                            .title(address.getFeatureName())
-                            .snippet(address.getAddressLine(0))
-                            .position(lat)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(lat));
+                   LatLng lat = new LatLng(address.getLatitude(), address.getLongitude());
+
                 });
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(map!=null){
+            loadHospital();
+        }
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -228,58 +215,99 @@ public class MapFragment extends Fragment {
         lightSensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(@NotNull SensorEvent sensorEvent) {
-                if(googleMap != null){
-                    if (sensorEvent.values[0] > 10000) {
-                        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_night_style));
-                    } else {
-                        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_day_style));
-                    }
+                if (sensorEvent.values[0] > 10000) {
+                    map.getOverlayManager().getTilesOverlay().setColorFilter(null);
+                } else {
+                    map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
                 }
+                map.invalidate();
             }
-
             @Override
             public void onAccuracyChanged(Sensor sensor, int i) {
 
             }
         };
         sensorManager.registerListener(lightSensorEventListener, lightSensor, SensorManager.SENSOR_DELAY_UI);
-    }
+        map.setMultiTouchControls(true);
+        map.getController().setZoom(15.0);
+        map.setBuiltInZoomControls(true);
+        ScaleBarOverlay scaleBarOverlay = new ScaleBarOverlay(map);
+        map.getOverlays().add(scaleBarOverlay);
+        validateRoute();
+        loadHospital();
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        LocationRequest locationRequest = LocationRequest.create()
+                .setInterval(5000)
+                .setFastestInterval(3000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
-    public void updateUserPositionOnMap(@NotNull LocationResult locationResult) {
-        Location location = locationResult.getLastLocation();
-        if (location != null) {
-            LatLng lat=new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
-            List<LatLng> points = userRoute.getPoints();
-            points.add(lat);
-            userRoute.setPoints(points);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(lat));
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
+        fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                if (locationResult != null) {
+                    Location location = locationResult.getLastLocation();
+                    if (location != null) {
+                        if(markerPosition==null){
+                            markerPosition = new org.osmdroid.views.overlay.Marker(map);
+                            markerPosition.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+                            markerPosition.setTitle("Mi posición");
+                            markerPosition.setIcon(getResources().getDrawable(R.drawable.ic_point));
+                            map.getOverlays().add(markerPosition);
+
+                        }
+                        markerPosition.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+                        map.getController().animateTo(new GeoPoint(location.getLatitude(), location.getLongitude()));
+                        // Convertir la posición del sensor a coordenadas de píxeles en el mapa
+                       }
+                    }
+            }
+        }, Looper.getMainLooper());
     }
+
     private List<PositionMap> loadInfo(){
         List<PositionMap> pointsMap=new ArrayList<>();
-        pointsMap.add(loadPoint(new LatLng(4.8097809252392985, -74.35124623145964),"Cafam EPS","Carrera 12"));
-        pointsMap.add(loadPoint(new LatLng(4.806413234619617, -74.34988366933705), "Hospital San Rafael", "Cra 15 N 3"));
-        pointsMap.add(loadPoint(new LatLng(4.808244084370125, -74.35322570169836),"Compensar EPS","Calle 9 N 12"));
-        pointsMap.add(loadPoint(new LatLng(4.808805365787758, -74.35256051389047),"Estrategico IPS", "Calle 45 N 12"));
+        DatabaseReference databaseRef = database.getReference("medicalCenters");
+        Query query = databaseRef.orderByChild("name");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getChildren().forEach(point->{
+                    DataSnapshot element = snapshot.getChildren().iterator().next();
+                    pointsMap.add(loadPoint(point));
+                });
+                points=pointsMap;
+                adapter.setDataSet(points);
+                loadHospital();
+            }
+             @Override
+             public void onCancelled(@NonNull DatabaseError error) {
+            }
+         });
         return pointsMap;
     }
     public void loadHospital(){
+
         points.stream().forEach(p->{
-            Address address=geocoderService.findPlacesByLatLng(p.getPosition());
-            marker=googleMap.addMarker(new MarkerOptions()
-                    .title(p.getTitle())
-                    .snippet(address.getAddressLine(0))
-                    .position(p.getPosition())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            org.osmdroid.views.overlay.Marker markerHospital = new org.osmdroid.views.overlay.Marker(map);
+            markerHospital.setPosition(new GeoPoint(p.getPosition().latitude, p.getPosition().longitude));
+            markerHospital.setTitle(p.getTitle());
+            markerHospital.setIcon(getResources().getDrawable(R.drawable.ic_point_hos));
+            map.getOverlays().add(markerHospital);
         });
     }
 
-    private PositionMap loadPoint(LatLng lat, String name, String address){
+    private PositionMap loadPoint(DataSnapshot element){
         PositionMap position=new PositionMap();
-        position.setPosition(lat);
-        position.setTitle(name);
-        position.setAddress(address);
+        position.setTitle((String) element.child("name").getValue());
+        position.setAddress((String) element.child("address").getValue());
+        position.setPhone((String) element.child("phone").getValue());
+        position.setPosition(new LatLng(Double.parseDouble(element.child("latitude").getValue().toString()),
+                Double.parseDouble(element.child("longitude").getValue().toString())));
         return position;
 
     }

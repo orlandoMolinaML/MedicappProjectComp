@@ -23,7 +23,7 @@ public class AlertsHelper {
     private final Context context;
 
     @Inject
-    AlertsHelper(@ApplicationContext Context context) {
+    public AlertsHelper(@ApplicationContext Context context) {
         this.context = context;
     }
 

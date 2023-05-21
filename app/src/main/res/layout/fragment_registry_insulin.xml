@@ -6,11 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".fragments.RegistryInsulinFragment">
 
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="29dp"
+        android:layout_marginTop="20dp"
         tools:context=".MainActivity">
 
 
@@ -22,11 +24,11 @@
             android:drawableLeft="@drawable/ic_syringe"
             android:text="@string/add_insul"
             android:textColor="@color/blue_500"
-            android:textSize="32dp" />
+            android:textSize="25dp" />
 
         <LinearLayout
             android:id="@+id/layoutData"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textTitle"
@@ -61,7 +63,7 @@
                         android:id="@+id/measureEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:textSize="18sp"
                         android:drawableStart="@drawable/ic_measure"
                         android:drawablePadding="5sp"
@@ -87,7 +89,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="25dp"
-                            android:layout_marginTop="85dp"
+                            android:layout_marginTop="75dp"
                             android:layout_marginRight="25dp"
                             android:drawableStart="@drawable/ic_calendar_da"
                             android:ems="10"
@@ -97,37 +99,40 @@
 
 
                     </com.google.android.material.textfield.TextInputLayout>
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/timeTextInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dateTextInput"
+
+                    android:layout_marginLeft="27dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:counterMaxLength="10"
-                        android:id="@+id/timeTextInput"
-                        android:layout_alignParentLeft="true"
-                        android:layout_below="@+id/dateTextInput"
-                        app:counterTextAppearance="@style/counterText"
-                        app:counterOverflowTextAppearance="@style/counterOverride">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/timeEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="25dp"
-                            android:layout_marginTop="85dp"
-                            android:layout_marginRight="25dp"
-                            android:drawableStart="@drawable/ic_time"
-                            android:ems="10"
-                            android:hint="@string/hour"
-                            android:inputType="textPersonName"
-                            android:textSize="18sp" />
-
-
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:src="@drawable/ic_time"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="@string/hour" />
+                    <TimePicker
+                        android:id="@+id/timePickerInsul"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:timePickerMode="spinner"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
 
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/layoutEmotion"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/layoutData"
@@ -144,8 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 app:cardBackgroundColor="@color/blue_100"
-
-                app:cardElevation="20dp"
+                app:cardElevation="10dp"
                 android:layout_marginRight="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -171,7 +175,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="2dp"
                             android:orientation="horizontal">
                             <ImageView
                                 android:id="@+id/sadImage"
@@ -220,7 +224,7 @@
 
     <LinearLayout
         android:id="@+id/layoutComment"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layoutEmotion"
@@ -237,7 +241,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             app:cardBackgroundColor="@color/blue_100"
-            app:cardElevation="20dp"
+            app:cardElevation="10dp"
             android:layout_marginRight="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -256,7 +260,7 @@
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="20dp"
+                    android:layout_margin="15dp"
                     app:counterMaxLength="10"
                     app:counterTextAppearance="@style/counterText"
                     app:counterOverflowTextAppearance="@style/counterOverride">
@@ -283,9 +287,10 @@
             android:background="@color/blue_500"
             android:layout_centerHorizontal="true"
             android:drawableStart="@drawable/ic_add"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:text="@string/add"
             android:textColor="@android:color/white" />
 
     </RelativeLayout>
+    </ScrollView>
 </FrameLayout>

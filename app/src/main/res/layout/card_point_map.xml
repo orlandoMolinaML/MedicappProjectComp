@@ -20,6 +20,7 @@
             android:id="@+id/imageHospital"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:padding="10dp"
             android:layout_marginRight="10dp"
             android:src="@drawable/ic_hospital_t"
             android:layout_marginLeft="20dp"/>
